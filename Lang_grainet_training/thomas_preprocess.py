@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
+import argparse
+import os
 from pathlib import Path
 from PIL import Image, ImageOps
 import multiprocessing as mp
 from functools import partial
 
 # ====== CONFIG ======
-IN_DIR = Path("torch/2_1_1/scratch/rig_v1_images/images_soil_geomanitoba")
-OUT_DIR = Path("/home/thomas_plante_stcyr/workspace/torch/2_1_1/scratch/extracted_features/grainet_images_500x200")
+IN_DIR = Path(os.environ.get("GRAINET_INPUT_DIR", "data/images"))
+OUT_DIR = Path(os.environ.get("GRAINET_OUTPUT_DIR", "data/grainet_images_500x200"))
 
 TARGET_ROWS = 500  # height
 TARGET_COLS = 200  # width
@@ -42,18 +44,28 @@ def process_one_image(in_path: Path, in_root: Path, out_root: Path):
 
 
 def main():
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    files = [p for p in sorted(IN_DIR.glob("**/*")) if p.suffix.lower() in EXTS]
+    parser = argparse.ArgumentParser(description="Resize all images to GraiNet input size (500x200) while preserving folder structure.")
+    parser.add_argument("--input-dir", default=str(IN_DIR), help="Input image directory.")
+    parser.add_argument("--output-dir", default=str(OUT_DIR), help="Output directory for resized images.")
+    parser.add_argument("--workers", type=int, default=NUM_WORKERS, help="Number of worker processes. Defaults to CPU count.")
+    args = parser.parse_args()
+
+    in_dir = Path(args.input_dir)
+    out_dir = Path(args.output_dir)
+    workers_arg = args.workers
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    files = [p for p in sorted(in_dir.glob("**/*")) if p.suffix.lower() in EXTS]
 
     if not files:
-        print(f"No images found in {IN_DIR}")
+        print(f"No images found in {in_dir}")
         return
 
-    print(f"Found {len(files)} images in {IN_DIR}")
-    workers = NUM_WORKERS or mp.cpu_count()
+    print(f"Found {len(files)} images in {in_dir}")
+    workers = workers_arg or mp.cpu_count()
     print(f"Using {workers} workers")
 
-    worker_fn = partial(process_one_image, in_root=IN_DIR, out_root=OUT_DIR)
+    worker_fn = partial(process_one_image, in_root=in_dir, out_root=out_dir)
 
     success = 0
     fail = 0
@@ -74,7 +86,7 @@ def main():
 
     print("\nDone.")
     print(f"Total success: {success}, errors: {fail}")
-    print("Resized images saved to:", OUT_DIR)
+    print("Resized images saved to:", out_dir)
 
 
 if __name__ == "__main__":

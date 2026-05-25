@@ -32,12 +32,13 @@ IN_CONTAINER = Path("/workspace").exists()
 if IN_CONTAINER:
     ROOT = Path("/workspace")
 else:
-    ROOT = Path.home() / "workspace" / "torch" / "2_1_1"
+    ROOT = Path(os.environ.get("ABMIL_DATA_ROOT", Path.cwd()))
 
 TRUTH_XLSX = os.environ.get("PSD_TRUTH_XLSX", str(ROOT / "scratch" / "labels" / "PSD.xlsx"))
 MASS_XLSX = os.environ.get("PSD_SAMPLE_MASS_XLSX",str(ROOT / "scratch" / "labels" / "MASS.xlsx"))
 FEAT_ROOT = ROOT / "scratch" / "dinov2_features_7616x5440"
 OUT_BASE  = ROOT / "model_runs_v2_ABMIL_224px_tiles"
+RES_FEATURE_ROOT = ROOT / "scratch" / "dinov2_224_res75_50_25"
 
 MAX_MASS_G = 9000.0  # Used to normalize sample mass features
 
@@ -104,14 +105,36 @@ class RowSetup:
 
 ROW_SETUPS: Dict[str, RowSetup] = {
     # For the following ablations: sample count, img per bag, moisture
-    "T224": RowSetup("T224", (Path("/home/thomas_plante_stcyr/workspace/torch/2_1_1/scratch/extracted_features/dinov2_features_7616x5440/dinov2_224_grid_34x24"),), (24, 34), 224),
+    "T224": RowSetup("T224", (FEAT_ROOT / "dinov2_224_grid_34x24",), (24, 34), 224),
 
     # Resolution setups for the ablation (100% already above)
-    "T224_75":  RowSetup("T224_75",  (Path("/home/thomas_plante_stcyr/workspace/torch/2_1_1/scratch/extracted_features/dinov2_224_res75_50_25/Res075"),), (18, 25), 224),
-    "T224_50":  RowSetup("T224_50",  (Path("/home/thomas_plante_stcyr/workspace/torch/2_1_1/scratch/extracted_features/dinov2_224_res75_50_25/Res050"),), (12, 17), 224),
-    "T224_25":  RowSetup("T224_25",  (Path("/home/thomas_plante_stcyr/workspace/torch/2_1_1/scratch/extracted_features/dinov2_224_res75_50_25/Res025"),), (6, 8), 224),
-    "T224_10":  RowSetup("T224_10",  (Path("/home/thomas_plante_stcyr/workspace/torch/2_1_1/scratch/extracted_features/dinov2_224_res75_50_25/Res010"),), (2, 3), 224),
+    "T224_75":  RowSetup("T224_75",  (RES_FEATURE_ROOT / "Res075",), (18, 25), 224),
+    "T224_50":  RowSetup("T224_50",  (RES_FEATURE_ROOT / "Res050",), (12, 17), 224),
+    "T224_25":  RowSetup("T224_25",  (RES_FEATURE_ROOT / "Res025",), (6, 8), 224),
+    "T224_10":  RowSetup("T224_10",  (RES_FEATURE_ROOT / "Res010",), (2, 3), 224),
 }
+
+def configure_paths(truth_xlsx: Optional[str] = None, mass_xlsx: Optional[str] = None, features_root: Optional[str] = None, output_dir: Optional[str] = None, res_features_root: Optional[str] = None) -> None:
+    global TRUTH_XLSX, MASS_XLSX, FEAT_ROOT, OUT_BASE, RES_FEATURE_ROOT, ROW_SETUPS
+
+    if truth_xlsx:
+        TRUTH_XLSX = truth_xlsx
+    if mass_xlsx:
+        MASS_XLSX = mass_xlsx
+    if features_root:
+        FEAT_ROOT = Path(features_root)
+    if output_dir:
+        OUT_BASE = Path(output_dir)
+    if res_features_root:
+        RES_FEATURE_ROOT = Path(res_features_root)
+
+    ROW_SETUPS = {
+        "T224": RowSetup("T224", (FEAT_ROOT / "dinov2_224_grid_34x24",), (24, 34), 224),
+        "T224_75": RowSetup("T224_75", (RES_FEATURE_ROOT / "Res075",), (18, 25), 224),
+        "T224_50": RowSetup("T224_50", (RES_FEATURE_ROOT / "Res050",), (12, 17), 224),
+        "T224_25": RowSetup("T224_25", (RES_FEATURE_ROOT / "Res025",), (6, 8), 224),
+        "T224_10": RowSetup("T224_10", (RES_FEATURE_ROOT / "Res010",), (2, 3), 224),
+    }
 
 # ==============================================================================
 #                            Experiment Descriptors                            
@@ -1126,8 +1149,20 @@ def _run_training_for_row(plan: StudyPlan, scenario: Scenario, row: RowSetup, ro
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run curated MIL ablation plans.")
     parser.add_argument("--plan", choices=sorted(STUDY_PLANS.keys()), default="sample-count", help="Select which ablation plan to execute.",)
+    parser.add_argument("--truth-xlsx", default=None, help="Path to PSD.xlsx ground-truth file.")
+    parser.add_argument("--mass-xlsx", default=None, help="Path to MASS.xlsx file.")
+    parser.add_argument("--features-root", default=None, help="Root directory containing dinov2_224_grid_34x24.")
+    parser.add_argument("--res-features-root", default=None, help="Root directory containing Res075/Res050/Res025/Res010 folders.")
+    parser.add_argument("--output-dir", default=None, help="Directory where experiment outputs are written.")
     
     args = parser.parse_args()
+    configure_paths(
+        truth_xlsx=args.truth_xlsx,
+        mass_xlsx=args.mass_xlsx,
+        features_root=args.features_root,
+        output_dir=args.output_dir,
+        res_features_root=args.res_features_root,
+    )
 
     print(f"[INFO] Effective workers: NUM_WORKERS={CFG['NUM_WORKERS']}, VAL_WORKERS={CFG['VAL_WORKERS']}")
 
