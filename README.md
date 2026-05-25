@@ -60,7 +60,7 @@ All data paths are now configurable via CLI arguments or environment variables.
 Example command:
 
 ```bash
-python /home/runner/work/abmil-optical-psd/abmil-optical-psd/ABMIL_training_224px_tiles/ABMIL_224px_tiles.py \
+python ABMIL_training_224px_tiles/ABMIL_224px_tiles.py \
   --plan moisture \
   --truth-xlsx /ABS/PATH/TO/labels/PSD.xlsx \
   --mass-xlsx /ABS/PATH/TO/labels/MASS.xlsx \
