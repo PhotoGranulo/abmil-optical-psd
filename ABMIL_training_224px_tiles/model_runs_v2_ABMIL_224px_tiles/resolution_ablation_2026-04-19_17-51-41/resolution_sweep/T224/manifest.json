@@ -1,0 +1,20 @@
+{
+  "plan": "resolution",
+  "scenario": "resolution_sweep",
+  "row_id": "T224",
+  "tile_px": 224,
+  "tiles_hw": [
+    24,
+    34
+  ],
+  "cfg_overrides": {},
+  "add_global_tile": true,
+  "loss_key": "cvm",
+  "sample_count": 316,
+  "train_sizes": [
+    252
+  ],
+  "k_folds": 5,
+  "repeats": 3,
+  "timestamp": "2026-04-19_17-51-41"
+}

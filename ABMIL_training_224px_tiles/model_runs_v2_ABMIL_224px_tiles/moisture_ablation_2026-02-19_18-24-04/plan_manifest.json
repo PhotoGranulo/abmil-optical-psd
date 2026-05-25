@@ -1,0 +1,155 @@
+{
+  "plan": "moisture",
+  "plan_description": "Compare performance on moist-only, dry-only, paired captures, and mass features.",
+  "base_seed": 1337,
+  "repeats": 3,
+  "timestamp": "2026-02-19_18-24-04",
+  "scenarios": [
+    {
+      "plan": "moisture",
+      "scenario": "dry_only_with_mass",
+      "row_id": "T224",
+      "tile_px": 224,
+      "tiles_hw": [
+        24,
+        34
+      ],
+      "cfg_overrides": {},
+      "add_global_tile": true,
+      "loss_key": "cvm",
+      "sample_count": 282,
+      "train_sizes": [
+        225
+      ],
+      "k_folds": 5,
+      "repeats": 3,
+      "timestamp": "2026-02-19_18-24-04",
+      "moisture_filter": [
+        "dry"
+      ],
+      "sample_feature_mode": "dry",
+      "sample_feature_dim": 1
+    },
+    {
+      "plan": "moisture",
+      "scenario": "moist_only_with_mass",
+      "row_id": "T224",
+      "tile_px": 224,
+      "tiles_hw": [
+        24,
+        34
+      ],
+      "cfg_overrides": {},
+      "add_global_tile": true,
+      "loss_key": "cvm",
+      "sample_count": 282,
+      "train_sizes": [
+        225
+      ],
+      "k_folds": 5,
+      "repeats": 3,
+      "timestamp": "2026-02-19_18-24-04",
+      "moisture_filter": [
+        "moist"
+      ],
+      "sample_feature_mode": "moist",
+      "sample_feature_dim": 1
+    },
+    {
+      "plan": "moisture",
+      "scenario": "paired_moist_dry_with_mass",
+      "row_id": "T224",
+      "tile_px": 224,
+      "tiles_hw": [
+        24,
+        34
+      ],
+      "cfg_overrides": {},
+      "add_global_tile": true,
+      "loss_key": "cvm",
+      "sample_count": 282,
+      "train_sizes": [
+        225
+      ],
+      "k_folds": 5,
+      "repeats": 3,
+      "timestamp": "2026-02-19_18-24-04",
+      "moisture_filter": [
+        "moist",
+        "dry"
+      ],
+      "sample_feature_mode": "both",
+      "sample_feature_dim": 2
+    },
+    {
+      "plan": "moisture",
+      "scenario": "moist_only",
+      "row_id": "T224",
+      "tile_px": 224,
+      "tiles_hw": [
+        24,
+        34
+      ],
+      "cfg_overrides": {},
+      "add_global_tile": true,
+      "loss_key": "cvm",
+      "sample_count": 282,
+      "train_sizes": [
+        225
+      ],
+      "k_folds": 5,
+      "repeats": 3,
+      "timestamp": "2026-02-19_18-24-04",
+      "moisture_filter": [
+        "moist"
+      ]
+    },
+    {
+      "plan": "moisture",
+      "scenario": "dry_only",
+      "row_id": "T224",
+      "tile_px": 224,
+      "tiles_hw": [
+        24,
+        34
+      ],
+      "cfg_overrides": {},
+      "add_global_tile": true,
+      "loss_key": "cvm",
+      "sample_count": 282,
+      "train_sizes": [
+        225
+      ],
+      "k_folds": 5,
+      "repeats": 3,
+      "timestamp": "2026-02-19_18-24-04",
+      "moisture_filter": [
+        "dry"
+      ]
+    },
+    {
+      "plan": "moisture",
+      "scenario": "paired_moist_dry",
+      "row_id": "T224",
+      "tile_px": 224,
+      "tiles_hw": [
+        24,
+        34
+      ],
+      "cfg_overrides": {},
+      "add_global_tile": true,
+      "loss_key": "cvm",
+      "sample_count": 282,
+      "train_sizes": [
+        225
+      ],
+      "k_folds": 5,
+      "repeats": 3,
+      "timestamp": "2026-02-19_18-24-04",
+      "moisture_filter": [
+        "moist",
+        "dry"
+      ]
+    }
+  ]
+}

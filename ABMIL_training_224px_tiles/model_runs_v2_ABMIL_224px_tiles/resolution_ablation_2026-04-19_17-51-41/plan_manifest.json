@@ -1,0 +1,89 @@
+{
+  "plan": "resolution",
+  "plan_description": "Evaluate four resolution scales (25%, 50%, 75%, 100%) to capture joint effects of spatial detail and bag size.",
+  "base_seed": 1337,
+  "repeats": 3,
+  "timestamp": "2026-04-19_17-51-41",
+  "scenarios": [
+    {
+      "plan": "resolution",
+      "scenario": "resolution_sweep",
+      "row_id": "T224_25",
+      "tile_px": 224,
+      "tiles_hw": [
+        2,
+        3
+      ],
+      "cfg_overrides": {},
+      "add_global_tile": true,
+      "loss_key": "cvm",
+      "sample_count": 316,
+      "train_sizes": [
+        252
+      ],
+      "k_folds": 5,
+      "repeats": 3,
+      "timestamp": "2026-04-19_17-51-41"
+    },
+    {
+      "plan": "resolution",
+      "scenario": "resolution_sweep",
+      "row_id": "T224_50",
+      "tile_px": 224,
+      "tiles_hw": [
+        12,
+        17
+      ],
+      "cfg_overrides": {},
+      "add_global_tile": true,
+      "loss_key": "cvm",
+      "sample_count": 316,
+      "train_sizes": [
+        252
+      ],
+      "k_folds": 5,
+      "repeats": 3,
+      "timestamp": "2026-04-19_17-51-41"
+    },
+    {
+      "plan": "resolution",
+      "scenario": "resolution_sweep",
+      "row_id": "T224_75",
+      "tile_px": 224,
+      "tiles_hw": [
+        18,
+        25
+      ],
+      "cfg_overrides": {},
+      "add_global_tile": true,
+      "loss_key": "cvm",
+      "sample_count": 316,
+      "train_sizes": [
+        252
+      ],
+      "k_folds": 5,
+      "repeats": 3,
+      "timestamp": "2026-04-19_17-51-41"
+    },
+    {
+      "plan": "resolution",
+      "scenario": "resolution_sweep",
+      "row_id": "T224",
+      "tile_px": 224,
+      "tiles_hw": [
+        24,
+        34
+      ],
+      "cfg_overrides": {},
+      "add_global_tile": true,
+      "loss_key": "cvm",
+      "sample_count": 316,
+      "train_sizes": [
+        252
+      ],
+      "k_folds": 5,
+      "repeats": 3,
+      "timestamp": "2026-04-19_17-51-41"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "plan": "sample-count",
+  "plan_description": "Multiples of four up to the available training pool per fold.",
+  "base_seed": 1337,
+  "repeats": 3,
+  "timestamp": "2026-02-19_18-22-30",
+  "scenarios": [
+    {
+      "plan": "sample-count",
+      "scenario": "train_pool_sweep",
+      "row_id": "T224",
+      "tile_px": 224,
+      "tiles_hw": [
+        24,
+        34
+      ],
+      "cfg_overrides": {},
+      "add_global_tile": true,
+      "loss_key": "cvm",
+      "sample_count": 316,
+      "train_sizes": [
+        32,
+        64,
+        96,
+        128,
+        160,
+        192,
+        224,
+        252
+      ],
+      "k_folds": 5,
+      "repeats": 3,
+      "timestamp": "2026-02-19_18-22-30"
+    }
+  ]
+}

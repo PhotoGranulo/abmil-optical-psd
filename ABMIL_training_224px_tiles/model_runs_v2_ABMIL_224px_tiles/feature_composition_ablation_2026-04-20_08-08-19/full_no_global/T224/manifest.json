@@ -1,0 +1,24 @@
+{
+  "plan": "feature_composition",
+  "scenario": "full_no_global",
+  "row_id": "T224",
+  "tile_px": 224,
+  "tiles_hw": [
+    24,
+    34
+  ],
+  "cfg_overrides": {
+    "FEATURE_MODE": "full",
+    "ADD_GLOBAL_TILE": false
+  },
+  "add_global_tile": false,
+  "feature_mode": "full",
+  "loss_key": "cvm",
+  "sample_count": 316,
+  "train_sizes": [
+    252
+  ],
+  "k_folds": 5,
+  "repeats": 1,
+  "timestamp": "2026-04-20_08-08-19"
+}
