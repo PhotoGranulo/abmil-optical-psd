@@ -37,15 +37,17 @@ Transformation Steps:
 """
 
 from pathlib import Path
+import argparse
+import os
 import numpy as np
 import pandas as pd
 from PIL import Image
 import re
 
-ROOT = Path("/home/thomas_plante_stcyr/workspace/torch/2_1_1/scratch")
-IMG_DIR = ROOT / "baseline_other_papers" / "Lang_grainet" / "thomas_images_500x200"
-PSD_XLSX = ROOT / "scratch" / "labels" / "PSD.xlsx"
-OUT_NPZ = ROOT / "baseline_other_papers" / "Lang_grainet" / "data_global_from_PSD_500x200.npz"
+ROOT = Path(os.environ.get("ABMIL_DATA_ROOT", Path.cwd()))
+IMG_DIR = ROOT / "data" / "grainet_images_500x200"
+PSD_XLSX = Path(os.environ.get("PSD_TRUTH_XLSX", str(ROOT / "data" / "labels" / "PSD.xlsx")))
+OUT_NPZ = ROOT / "data" / "grainet_data_global_from_PSD_500x200.npz"
 SAMPLE_ID_COLUMN = "num_publication"
 SID_RX = re.compile(r"^(?P<sid>\d{1,6})")
 TARGET_ROWS = 500
@@ -159,13 +161,23 @@ def extract_sid_from_name(name: str) -> int | None:
 
 
 def main():
-    print("Loading PSD.xlsx...")
-    psd_cdf_map, dm_map = load_psd_xlsx(PSD_XLSX)
-    print(f"Loaded PSD for {len(psd_cdf_map)} samples from {PSD_XLSX}")
+    parser = argparse.ArgumentParser(description="Build GraiNet NPZ labels from PSD spreadsheet and resized images.")
+    parser.add_argument("--img-dir", default=str(IMG_DIR), help="Directory containing preprocessed images.")
+    parser.add_argument("--psd-xlsx", default=str(PSD_XLSX), help="Path to PSD.xlsx labels file.")
+    parser.add_argument("--out-npz", default=str(OUT_NPZ), help="Output NPZ path.")
+    args = parser.parse_args()
 
-    print("Indexing images in:", IMG_DIR)
+    img_dir = Path(args.img_dir)
+    psd_xlsx = Path(args.psd_xlsx)
+    out_npz = Path(args.out_npz)
+
+    print("Loading PSD.xlsx...")
+    psd_cdf_map, dm_map = load_psd_xlsx(psd_xlsx)
+    print(f"Loaded PSD for {len(psd_cdf_map)} samples from {psd_xlsx}")
+
+    print("Indexing images in:", img_dir)
     img_paths = sorted(
-        p for p in IMG_DIR.glob("**/*")
+        p for p in img_dir.glob("**/*")
         if p.suffix.lower() in {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".bmp", ".webp"}
     )
 
@@ -216,15 +228,15 @@ def main():
     print("  dm         :", dms.shape)
     print("  tile_names :", names.shape)
 
-    OUT_NPZ.parent.mkdir(parents=True, exist_ok=True)
+    out_npz.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(
-        OUT_NPZ,
+        out_npz,
         images=images,
         histograms=histograms,
         dm=dms,
         tile_names=names,
     )
-    print("Saved:", OUT_NPZ)
+    print("Saved:", out_npz)
 
 
 if __name__ == "__main__":
